@@ -8,13 +8,14 @@ const io = new Server(server);
 
 chatApp.use(express.static("clients"));
 
-// Global variables to hold all guest names and chatRooms created
+// Global variables to hold all guest names and rooms created
 var guests = {};
-var chatRooms = [
+var rooms = [
   { name: "main", creator: " " },
   { name: "Room 2", creator: " " },
 ];
 
+// connecting to the socket 
 io.on("connection", socket => {
   console.log(`User connected to server.`);
 
@@ -31,7 +32,7 @@ io.on("connection", socket => {
       .to("main")
       .emit("updateChat", "INFO", username + " has joined the main room");
     io.sockets.emit("updateUsers", guests);
-    socket.emit("updateRooms", chatRooms, "main");
+    socket.emit("updateRooms", rooms, "main");
   });
 
   socket.on("sendMessage", data => {
@@ -40,8 +41,8 @@ io.on("connection", socket => {
 
   socket.on("createRoom", room=> {
     if (room != null) {
-      chatRooms.push({ name: room, creator: socket.username});
-      io.sockets.emit("updateRooms", chatRooms, null);
+      rooms.push({ name: room, creator: socket.username});
+      io.sockets.emit("updateRooms", rooms, null);
     }
   });
 
