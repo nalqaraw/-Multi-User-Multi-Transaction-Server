@@ -72,12 +72,16 @@ socket.on("disconnect",  ()=> {
 
   socket.broadcast.emit(
     "updateChat",
+    "INFO",
+    socket.username + " disconnected"
   );
-
+  console.log(guests.length);
+  
   //if statement to check if there are anymore users on the server, if there arent the socket will be terminated gracefully
   if(guests.length < 1 || guests == undefined){
     socket.disconnect();
     console.log("The server has gracefully terminated!");
+    console.log(guests.length);
     server.close(()=>{
       console.log("closing the server");
       process.exit(0);
