@@ -56,7 +56,7 @@ body {
 }
 
 
-.roomList {
+.activeRoomList {
   display: flex;
   flex-direction: column;
   flex: 100;

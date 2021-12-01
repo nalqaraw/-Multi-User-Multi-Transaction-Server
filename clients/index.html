@@ -23,9 +23,14 @@
 
   <body>
     <div class="application">
-      <div class="chatArea">
-        <div id="sidebar" class="leftSide"> 
+      <div >
+        <div id="sidebar" class="leftSide">
+             <span class="colored"></span></span>
           </div>
+
+          <span ></span>
+          <div id="active_users_list"></div>
+        </div>
 
         <div class="chatInnerSpace">
           <div class="chatBackground">
@@ -45,10 +50,10 @@
         </div>
 
         <div class="rightSide">
-          <span class="roomsList">Rooms</span>
-          <div id="active_rooms_list" class="roomList"></div>
+          <span class="roomList">Rooms</span>
+          <div id="active_rooms_list" class="activeRoomList"></div>
 
-          <div class="roomInput">
+          <div >
             <input type="text" id="roomInput" placeholder="Create room" />
             <button id="room_add_icon_holder" class="addRoom">
               +
@@ -62,6 +67,7 @@
       
       var socket = io();
 
+      var userlist = document.getElementById("active_users_list");
       var roomlist = document.getElementById("active_rooms_list");
       var message = document.getElementById("messageInput");
       var sendMessageBtn = document.getElementById("send_message_btn");
@@ -104,15 +110,15 @@
       socket.on("updateChat", function (username, data) {
         if (username === "INFO") {
           console.log("Displaying announcement");
-          chatDisplay.innerHTML += `<div><span>${data}</span></div>`;
+          chatDisplay.innerHTML += `<div ><span>${data}</span></div>`;
         } else {
           console.log("Displaying user message");
           chatDisplay.innerHTML += `<div  ${
             username === guestName ? "me" : ""
           }">
                                       <div >
-                                        <div id="message" class="message">
-                                          <span >${username}:</span>
+                                        <div id="message" >
+                                          <span >${username}</span>
                                           <span >${data}</span>
                                         </div>
                                       </div>
@@ -126,7 +132,7 @@
         userlist.innerHTML = "";
         console.log("Guest names returned from server", guests);
         for (var g in guests) {
-          userlist.innerHTML += `<div>
+          userlist.innerHTML += `<div >
                                     <span>${g}</span>
                                   </div>`;
         }
@@ -138,10 +144,10 @@
         for (var index in rooms) {
           roomlist.innerHTML += `<div  id="${rooms[index].name}"
                                       onclick="changeRoom('${rooms[index].name}')">
-                                      <div>
-                                          <div class="roomInfo">
+                                      <div >
+                                          <div >
                                           <span >#${rooms[index].name}</span>
-                                          <span class="room_author">${rooms[index].creator}</span>
+                                          <span >${rooms[index].creator}</span>
                                           </div>
                                       </div>
                                   </div>`;
