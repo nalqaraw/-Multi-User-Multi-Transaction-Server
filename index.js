@@ -52,9 +52,8 @@ io.on("connection", socket => {
     socket.currentRoom = room;
     socket.join(room);
     socket.emit("updateChat", "INFO", "Hello! You have joined the " + room + " room");
-    socket.broadcast
-      .to(room)
-      .emit(
+    socket.broadcast.to(room);
+    socket.broadcast.emit(
         "updateChat",
         "INFO",
         socket.username + " has joined " + room + " room"
@@ -72,11 +71,10 @@ io.on("connection", socket => {
       socket.username + " disconnected"
     );
 
-    //if statemetn to check if there are anymore users on the server, if there arent the socket will be terminated gracefully
+    //if statement to check if there are anymore users on the server, if there arent the socket will be terminated gracefully
     if(guests.length == 0){
       socket.disconnect();
     }
-
   });
 });
 
