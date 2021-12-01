@@ -24,7 +24,7 @@ io.on("connection", socket => {
   socket.on("addGuest", username =>{
     socket.username = username;
     guests.push(username);
-    console.log(guests.length);
+    console.log("adding users array length: "+ guests.length);
     socket.currentRoom = "main";
     socket.join("main");
 
@@ -64,16 +64,17 @@ io.on("connection", socket => {
 
   //client will terminate gracefully when they leave the tab
   socket.on("disconnect",  ()=> {
-    console.log(`User ${socket.username} has disconnected.`);
-    // delete guests[socket.username];
-    guests.pop(socket.username);
+    socket.username = username;
+    console.log(`User ${username} has disconnected.`);
+    guests.pop(username);
+    console.log("new length after deleted user: " + guests.length);
     io.sockets.emit("updateUsers", guests);
     socket.broadcast.emit(
       "updateChat",
       "INFO",
-      socket.username + " disconnected"
+      username + " disconnected"
     );
-    console.log(guests.length);
+    console.log("final array length"+ guests.length);
 
     //if statement to check if there are anymore users on the server, if there arent the socket will be terminated gracefully
     if(guests.length < 1 || guests == undefined){
@@ -83,7 +84,7 @@ io.on("connection", socket => {
       server.close(()=>{
         console.log("closing the server");
         process.exit(0);
-      });
+      })
     }
   });
 });
