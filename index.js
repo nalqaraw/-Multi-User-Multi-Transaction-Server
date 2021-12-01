@@ -63,31 +63,27 @@ io.on("connection", socket => {
       );
   });
 
-  //client will terminate gracefully when they leave the tab
-  socket.on("disconnect",  ()=> {
-    console.log(`User ${socket.username} has disconnected.`);
-    delete guests[socket.username];
-    guests.pop(socket.username);
-    console.log("new length after deleted user: " + guests.length);
-    io.sockets.emit("updateUsers", guests);
-    socket.broadcast.emit(
-      "updateChat",
-      "INFO",
-      socket.username + " disconnected"
-    );
-    console.log("final array length"+ guests.length);
+//client will terminate gracefully when they leave the tab
+socket.on("disconnect",  ()=> {
+  console.log(`User ${socket.username} has disconnected.`);
+  // delete guests[socket.username];
+  guests.pop(socket.username);
+  io.sockets.emit("updateUsers", guests);
 
-    //if statement to check if there are anymore users on the server, if there arent the socket will be terminated gracefully
-    if(guests.length < 1 || guests == undefined){
-      socket.disconnect();
-      console.log("The server has gracefully terminated!");
-      console.log(guests.length);
-      server.close(()=>{
-        console.log("closing the server");
-        process.exit(0);
-      })
-    }
-  });
+  socket.broadcast.emit(
+    "updateChat",
+  );
+
+  //if statement to check if there are anymore users on the server, if there arent the socket will be terminated gracefully
+  if(guests.length < 1 || guests == undefined){
+    socket.disconnect();
+    console.log("The server has gracefully terminated!");
+    server.close(()=>{
+      console.log("closing the server");
+      process.exit(0);
+    });
+  }
+});
 });
 
 server.listen(80, ()=> {
