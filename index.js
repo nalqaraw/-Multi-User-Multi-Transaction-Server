@@ -13,10 +13,10 @@ var guests = {};
 var chatRooms = [
   { name: "main", creator: " " },
   { name: "Room 2", creator: " " },
+  { name: "Room 3", creator: " " },
 ];
 
-io.on("connection", socket => {
-  console.log(`User connected to server.`);
+io.on("joining", socket => {
 
   socket.on("createUser", username =>{
     socket.username = username;
