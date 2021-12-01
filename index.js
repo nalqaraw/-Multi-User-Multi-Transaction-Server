@@ -9,7 +9,7 @@ const io = new Server(server);
 chatApp.use(express.static("clients"));
 
 // Global variables to hold all guest names and rooms created
-var guests = {};
+var guests = [];
 var rooms = [
   { name: "main", creator: " " },
   { name: "Room 2", creator: " " },
@@ -19,6 +19,7 @@ var rooms = [
 // connecting to the socket 
 io.on("connection", socket => {
 
+  // 
   socket.on("createUser", username =>{
     socket.username = username;
     guests[username] = username;
@@ -28,9 +29,8 @@ io.on("connection", socket => {
     console.log(`User ${username} created on server successfully.`);
 
     socket.emit("updateChat", "INFO", "You have joined main room");
-    socket.broadcast
-      .to("main")
-      .emit("updateChat", "INFO", username + " has joined the main room");
+    socket.broadcast.to("main");
+    socket.broadcast.emit("updateChat", "INFO", username + " has joined the main room");
     io.sockets.emit("updateUsers", guests);
     socket.emit("updateRooms", rooms, "main");
   });
@@ -63,6 +63,7 @@ io.on("connection", socket => {
       );
   });
 
+  //client will terminate gracefully when they leave the tab
   socket.on("disconnect",  ()=> {
     console.log(`User ${socket.username} has disconnected.`);
     delete guests[socket.username];
@@ -72,6 +73,12 @@ io.on("connection", socket => {
       "INFO",
       socket.username + " disconnected"
     );
+
+    //if statemetn to check if there are anymore users on the server, if there arent the socket will be terminated gracefully
+    if(guests.length == 0){
+      socket.disconnect();
+    }
+
   });
 });
 
