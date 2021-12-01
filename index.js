@@ -13,11 +13,11 @@ var guests = {};
 var rooms = [
   { name: "main", creator: " " },
   { name: "Room 2", creator: " " },
+  { name: "Room 3", creator: " " },
 ];
 
 // connecting to the socket 
 io.on("connection", socket => {
-  console.log(`User connected to server.`);
 
   socket.on("createUser", username =>{
     socket.username = username;
