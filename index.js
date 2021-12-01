@@ -1,3 +1,4 @@
+const e = require("cors");
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -7,6 +8,7 @@ const server = http.createServer(chatApp);
 const io = new Server(server);
 
 chatApp.use(express.static("clients"));
+
 
 // Global variables to hold all guest names and rooms created
 var guests = [];
@@ -22,7 +24,7 @@ io.on("connection", socket => {
   // 
   socket.on("addGuest", username =>{
     socket.username = username;
-    guests[username] = username;
+    guests.push(username);
     socket.currentRoom = "main";
     socket.join("main");
 
@@ -63,7 +65,8 @@ io.on("connection", socket => {
   //client will terminate gracefully when they leave the tab
   socket.on("disconnect",  ()=> {
     console.log(`User ${socket.username} has disconnected.`);
-    delete guests[socket.username];
+    // delete guests[socket.username];
+    guests.pop(socket.username);
     io.sockets.emit("updateUsers", guests);
     socket.broadcast.emit(
       "updateChat",
@@ -72,9 +75,13 @@ io.on("connection", socket => {
     );
 
     //if statement to check if there are anymore users on the server, if there arent the socket will be terminated gracefully
-    if(guests.length == 0){
+    if(guests.length < 1 || guests == undefined){
       socket.disconnect();
-      console.log("The server has gracefully terminated!")
+      console.log("The server has gracefully terminated!");
+      server.close(()=>{
+        console.log("closing the server");
+        process.exit(0);
+      });
     }
   });
 });
