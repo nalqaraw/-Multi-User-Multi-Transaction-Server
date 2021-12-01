@@ -82,7 +82,7 @@
       // Prompt for guest name on connecting to server
       socket.on("connect", function () {
           guestName = prompt("Enter name: ");
-        socket.emit("createUser", guestName);
+        socket.emit("addGuest", guestName);
       });
 
       // Send message on button click
