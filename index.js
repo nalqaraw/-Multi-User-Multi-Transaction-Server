@@ -26,8 +26,6 @@ io.on("connection", socket => {
     socket.currentRoom = "main";
     socket.join("main");
 
-    console.log(`User ${username} created on server successfully.`);
-
     socket.emit("updateChat", "INFO", "You have joined main room");
     socket.broadcast.to("main");
     socket.broadcast.emit("updateChat", "INFO", username + " has joined the main room");
