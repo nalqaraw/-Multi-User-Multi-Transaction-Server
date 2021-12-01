@@ -20,7 +20,7 @@ var rooms = [
 io.on("connection", socket => {
 
   // 
-  socket.on("createUser", username =>{
+  socket.on("addGuest", username =>{
     socket.username = username;
     guests[username] = username;
     socket.currentRoom = "main";
