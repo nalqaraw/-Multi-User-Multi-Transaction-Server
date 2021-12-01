@@ -74,6 +74,7 @@ io.on("connection", socket => {
     //if statement to check if there are anymore users on the server, if there arent the socket will be terminated gracefully
     if(guests.length == 0){
       socket.disconnect();
+      console.log("The server has gracefully terminated!")
     }
   });
 });
