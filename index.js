@@ -16,7 +16,7 @@ var chatRooms = [
   { name: "Room 3", creator: " " },
 ];
 
-io.on("joining", socket => {
+io.on("connection", socket => {
 
   socket.on("createUser", username =>{
     socket.username = username;
