@@ -68,6 +68,8 @@ socket.on("disconnect",  ()=> {
   console.log(`User ${socket.username} has disconnected.`);
   // delete guests[socket.username];
   guests.pop(socket.username);
+  console.log("removing user from array- new length: " + guests.length);
+
   io.sockets.emit("updateUsers", guests);
 
   socket.broadcast.emit(
@@ -75,8 +77,8 @@ socket.on("disconnect",  ()=> {
     "INFO",
     socket.username + " disconnected"
   );
-  console.log(guests.length);
   
+
   //if statement to check if there are anymore users on the server, if there arent the socket will be terminated gracefully
   if(guests.length < 1 || guests == undefined){
     socket.disconnect();
