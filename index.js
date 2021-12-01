@@ -19,14 +19,16 @@ var rooms = [
 
 // connecting to the socket 
 io.on("connection", socket => {
-
-  // 
+  console.log("user is connected!");
+  //
   socket.on("addGuest", username =>{
     socket.username = username;
     guests.push(username);
     console.log("adding users array length: "+ guests.length);
     socket.currentRoom = "main";
     socket.join("main");
+
+    console.log("user " + username + " joined server")
 
     socket.emit("updateChat", "INFO", "You have joined main room");
     socket.broadcast.to("main");
@@ -47,9 +49,8 @@ io.on("connection", socket => {
   });
 
   socket.on("updateRooms", room => {
-    socket.broadcast
-      .to(socket.currentRoom)
-      .emit("updateChat", "INFO", socket.username + " has left the room");
+    socket.broadcast.to(socket.currentRoom);
+    socket.broadcast.emit("updateChat", "INFO", socket.username + " has left the room");
     socket.leave(socket.currentRoom);
     socket.currentRoom = room;
     socket.join(room);
@@ -64,15 +65,15 @@ io.on("connection", socket => {
 
   //client will terminate gracefully when they leave the tab
   socket.on("disconnect",  ()=> {
-    socket.username = username;
-    console.log(`User ${username} has disconnected.`);
-    guests.pop(username);
+    console.log(`User ${socket.username} has disconnected.`);
+    delete guests[socket.username];
+    guests.pop(socket.username);
     console.log("new length after deleted user: " + guests.length);
     io.sockets.emit("updateUsers", guests);
     socket.broadcast.emit(
       "updateChat",
       "INFO",
-      username + " disconnected"
+      socket.username + " disconnected"
     );
     console.log("final array length"+ guests.length);
 
