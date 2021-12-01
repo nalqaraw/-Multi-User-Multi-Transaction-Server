@@ -23,40 +23,34 @@
 
   <body>
     <div class="application">
-      <div class="chat_app">
-        <div id="sidebar" class="left_sidebar">
-          <div class="logo_text">
-             <span class="colored"></span></span>
+      <div class="chatArea">
+        <div id="sidebar" class="leftSide"> 
           </div>
 
-          <span class="user_label"></span>
-          <div id="active_users_list"></div>
-        </div>
-
-        <div class="chat_area">
-          <div class="chat_bg">
+        <div class="chatInnerSpace">
+          <div class="chatBackground">
             <div id="chat" class="chat"></div>
 
-            <div class="chat_input">
+            <div class="chatText">
               <input
                 type="text"
                 id="messageInput"
                 placeholder="Enter message"
               />
-              <button id="send_message_btn" class="send_message_btn" id="send">
+              <button id="send_message_btn" class="sendMessageButton" id="send">
                 SEND
               </button>
             </div>
           </div>
         </div>
 
-        <div class="right_sidebar">
+        <div class="rightSide">
           <span class="roomsList">Rooms</span>
-          <div id="active_rooms_list" class="active_rooms_list"></div>
+          <div id="active_rooms_list" class="roomList"></div>
 
-          <div class="room_input">
+          <div class="roomInput">
             <input type="text" id="roomInput" placeholder="Create room" />
-            <button id="room_add_icon_holder" class="room_add_icon_holder">
+            <button id="room_add_icon_holder" class="addRoom">
               +
             </button>
           </div>
@@ -68,7 +62,6 @@
       
       var socket = io();
 
-      var userlist = document.getElementById("active_users_list");
       var roomlist = document.getElementById("active_rooms_list");
       var message = document.getElementById("messageInput");
       var sendMessageBtn = document.getElementById("send_message_btn");
@@ -111,16 +104,16 @@
       socket.on("updateChat", function (username, data) {
         if (username === "INFO") {
           console.log("Displaying announcement");
-          chatDisplay.innerHTML += `<div class="announcement"><span>${data}</span></div>`;
+          chatDisplay.innerHTML += `<div><span>${data}</span></div>`;
         } else {
           console.log("Displaying user message");
-          chatDisplay.innerHTML += `<div class="message_holder ${
+          chatDisplay.innerHTML += `<div  ${
             username === guestName ? "me" : ""
           }">
-                                      <div class="message_box">
+                                      <div >
                                         <div id="message" class="message">
-                                          <span class="message_name">${username}</span>
-                                          <span class="message_text">${data}</span>
+                                          <span >${username}:</span>
+                                          <span >${data}</span>
                                         </div>
                                       </div>
                                     </div>`;
@@ -133,7 +126,7 @@
         userlist.innerHTML = "";
         console.log("Guest names returned from server", guests);
         for (var g in guests) {
-          userlist.innerHTML += `<div class="user_card">
+          userlist.innerHTML += `<div>
                                     <span>${g}</span>
                                   </div>`;
         }
@@ -143,11 +136,11 @@
         roomlist.innerHTML = "";
 
         for (var index in rooms) {
-          roomlist.innerHTML += `<div class="room_card" id="${rooms[index].name}"
+          roomlist.innerHTML += `<div  id="${rooms[index].name}"
                                       onclick="changeRoom('${rooms[index].name}')">
-                                      <div class="room_item_content">
+                                      <div>
                                           <div class="roomInfo">
-                                          <span class="room_name">#${rooms[index].name}</span>
+                                          <span >#${rooms[index].name}</span>
                                           <span class="room_author">${rooms[index].creator}</span>
                                           </div>
                                       </div>
