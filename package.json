@@ -1,0 +1,24 @@
+{
+  "name": "-multi-user-multi-transaction-server",
+  "version": "1.0.0",
+  "description": "This project is about creating a multi-user multi-transaction Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nalqaraw/-Multi-User-Multi-Transaction-Server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nalqaraw/-Multi-User-Multi-Transaction-Server/issues"
+  },
+  "homepage": "https://github.com/nalqaraw/-Multi-User-Multi-Transaction-Server#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "io": "^1.0.4",
+    "socket.io": "^4.4.0"
+  }
+}
