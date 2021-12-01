@@ -11,8 +11,8 @@ chatApp.use(express.static("clients"));
 // Global variables to hold all guest names and rooms created
 var guests = {};
 var rooms = [
-  { name: "main", creator: "Anonymous" },
-  { name: "Room 2", creator: "Anonymous" },
+  { name: "main", creator: " " },
+  { name: "Room 2", creator: " " },
 ];
 
 io.on("connection", socket => {
