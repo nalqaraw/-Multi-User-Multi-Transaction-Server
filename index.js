@@ -8,9 +8,9 @@ const io = new Server(server);
 
 chatApp.use(express.static("clients"));
 
-// Global variables to hold all guest names and rooms created
+// Global variables to hold all guest names and chatRooms created
 var guests = {};
-var rooms = [
+var chatRooms = [
   { name: "main", creator: " " },
   { name: "Room 2", creator: " " },
 ];
@@ -31,7 +31,7 @@ io.on("connection", socket => {
       .to("main")
       .emit("updateChat", "INFO", username + " has joined the main room");
     io.sockets.emit("updateUsers", guests);
-    socket.emit("updateRooms", rooms, "main");
+    socket.emit("updateRooms", chatRooms, "main");
   });
 
   socket.on("sendMessage", data => {
@@ -40,8 +40,8 @@ io.on("connection", socket => {
 
   socket.on("createRoom", room=> {
     if (room != null) {
-      rooms.push({ name: room, creator: socket.username});
-      io.sockets.emit("updateRooms", rooms, null);
+      chatRooms.push({ name: room, creator: socket.username});
+      io.sockets.emit("updateRooms", chatRooms, null);
     }
   });
 
