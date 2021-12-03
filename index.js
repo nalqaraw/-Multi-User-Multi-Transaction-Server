@@ -20,27 +20,35 @@ var rooms = [
 // connecting to the socket 
 io.on("connection", socket => {
   console.log("user is connected!");
-  //
+  
+  //Creating the addGuest command to be called 
   socket.on("addGuest", username =>{
+    
+    //adding the new guest to the array and displaying it 
     socket.username = username;
     guests.push(username);
     console.log("adding users array length: "+ guests.length);
+    
+    //setting the socket connection for the guest to the main room
     socket.currentRoom = "main";
     socket.join("main");
 
-    console.log("user " + username + " joined server")
-
+    //updating the chat and displaying the message below to only the new joined user
     socket.emit("updateChat", "INFO", "You have joined main room");
     socket.broadcast.to("main");
+
+    //this will inform the entire room that a member has joined
     socket.broadcast.emit("updateChat", "INFO", username + " has joined the main room");
     io.sockets.emit("updateUsers", guests);
     socket.emit("updateRooms", rooms, "main");
   });
 
+  //code that allows for the user to send a message through sending data
   socket.on("sendMessage", data => {
     io.sockets.to(socket.currentRoom).emit("updateChat", socket.username, data);
   });
 
+  //enabling the createroom fundtion, this pushes the new name of the room and updates the room list
   socket.on("createRoom", room=> {
     if (room != null) {
       rooms.push({ name: room, creator: socket.username});
@@ -48,6 +56,7 @@ io.on("connection", socket => {
     }
   });
 
+  //update room content that is executed everytime there is a new room created or if someone leaves etc. 
   socket.on("updateRooms", room => {
     socket.broadcast.to(socket.currentRoom);
     socket.broadcast.emit("updateChat", "INFO", socket.username + " has left the room");
@@ -92,6 +101,4 @@ socket.on("disconnect",  ()=> {
 });
 });
 
-server.listen(80, ()=> {
-  console.log("Listening to port 80.");
-});
+server.listen(80, ()=> {});
