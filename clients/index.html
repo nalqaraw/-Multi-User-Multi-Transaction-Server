@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-      <!-- <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Chat App</title>
-
-    <link
-      href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
-      rel="stylesheet"
-    /> -->
-
     <link rel="stylesheet" href="style.css" /> 
 
     <script
@@ -67,6 +57,7 @@
       
       var socket = io();
 
+      //creating variables to store necessary application data
       var userlist = document.getElementById("active_users_list");
       var roomlist = document.getElementById("active_rooms_list");
       var message = document.getElementById("messageInput");
@@ -107,12 +98,14 @@
         }
       });
 
+      //function executed to update the chat every time someone sends a message
       socket.on("updateChat", function (username, data) {
         if (username === "INFO") {
-          console.log("Displaying announcement");
+          //updating the chat display
           chatDisplay.innerHTML += `<div ><span>${data}</span></div>`;
         } else {
-          console.log("Displaying user message");
+          
+          //displaying the users message as a username and the actual message
           chatDisplay.innerHTML += `<div  ${
             username === guestName ? "me" : ""
           }">
@@ -128,9 +121,11 @@
         chatDisplay.scrollTop = chatDisplay.scrollHeight;
       });
 
+      //in the case where more guests join the chat we update that list
       socket.on("updateUsers", guests => {
         userlist.innerHTML = "";
-        console.log("Guest names returned from server", guests);
+        
+        //iterating through the guest list which contains all of the values of guest names
         for (var g in guests) {
           userlist.innerHTML += `<div >
                                     <span>${g}</span>
@@ -138,9 +133,12 @@
         }
       });
 
+      //function to add the different rooms that the users can create
       socket.on("updateRooms", function (rooms, newRoom) {
         roomlist.innerHTML = "";
 
+        //iterating through the list of rooms created and displaying them at the bottom of the page
+        //in the event one of those rooms text is clicked it calls the change room function
         for (var index in rooms) {
           roomlist.innerHTML += `<div  id="${rooms[index].name}"
                                       onclick="changeRoom('${rooms[index].name}')">
@@ -156,8 +154,11 @@
         document.getElementById(currentRoom).classList.add("active_item");
       });
 
+      //the function that allows for the user to change rooms when selected from the list of rooms
       function changeRoom(room) {
         if (room != currentRoom) {
+
+          //the room they are currently in is added to the current room list while the old room is removed
           socket.emit("updateRooms", room);
           document.getElementById(currentRoom).classList.remove("active_item");
           currentRoom = room;
