@@ -72,12 +72,12 @@
       // Prompt for guest name on connecting to server
       socket.on("connect", function () {
           guestName = prompt("Enter name: ");
-        socket.emit("addGuest", guestName);
+        socket.emit("addGuest", guestName);//call back function to emit the user changes from the clients end
       });
 
       // Send message on button click
       sendMessageBtn.addEventListener("click", function () {
-        socket.emit("sendMessage", message.value);
+        socket.emit("sendMessage", message.value);//call back function to emit the user changes from the clients end
         message.value = "";
       });
 
@@ -93,13 +93,13 @@
         // socket.emit("createRoom", prompt("Enter new room: "));
         let roomName = roomInput.value.trim();
         if (roomName !== "") {
-          socket.emit("createRoom", roomName);
+          socket.emit("createRoom", roomName);//call back function to emit the user changes from the clients end
           roomInput.value = "";
         }
       });
 
       //function executed to update the chat every time someone sends a message
-      socket.on("updateChat", function (username, data) {
+      socket.on("updateChat", function (username, data) {//listener function to get the update from the server's end
         if (username === "INFO") {
           //updating the chat display
           chatDisplay.innerHTML += `<div ><span>${data}</span></div>`;
@@ -122,7 +122,7 @@
       });
 
       //in the case where more guests join the chat we update that list
-      socket.on("updateUsers", guests => {
+      socket.on("updateUsers", guests => {//listener function to get the update from the server's end
         userlist.innerHTML = "";
         
         //iterating through the guest list which contains all of the values of guest names
@@ -134,7 +134,7 @@
       });
 
       //function to add the different rooms that the users can create
-      socket.on("updateRooms", function (rooms, newRoom) {
+      socket.on("updateRooms", function (rooms, newRoom) {//listener function to get the update from the server's end
         roomlist.innerHTML = "";
 
         //iterating through the list of rooms created and displaying them at the bottom of the page
@@ -159,7 +159,7 @@
         if (room != currentRoom) {
 
           //the room they are currently in is added to the current room list while the old room is removed
-          socket.emit("updateRooms", room);
+          socket.emit("updateRooms", room);//call back function to emit the user changes from the clients end
           document.getElementById(currentRoom).classList.remove("active_item");
           currentRoom = room;
           document.getElementById(currentRoom).classList.add("active_item");
